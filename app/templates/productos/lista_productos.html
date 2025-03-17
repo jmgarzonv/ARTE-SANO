@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h2>Lista de Productos</h2>
+<a href="{% url 'crear_producto' %}">Agregar Producto</a>
+<ul>
+    {% for producto in productos %}
+    <li>
+        <strong>{{ producto.titulo }}</strong> - ${{ producto.precio }}
+        <br>
+        <p>{{ producto.descripcion }}</p> 
+        
+        <p><strong>Stock:</strong> {{ producto.stock }} unidades</p>  
+
+        {% if producto.imagen %}
+            <img src="{{ producto.imagen.url }}" alt="{{ producto.titulo }}" width="100">
+        {% else %}
+            <p>No hay imagen disponible</p>
+        {% endif %}
+        <br>
+        <a href="{% url 'eliminar_producto' producto.id %}" onclick="return confirm('¿Estás seguro de que quieres eliminar este producto?')"> Eliminar</a>
+    </li>
+    {% endfor %}
+</ul>
+{% endblock %}
