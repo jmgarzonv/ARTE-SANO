@@ -33,3 +33,8 @@ def eliminar_producto(request, producto_id):
     producto = get_object_or_404(Producto, id=producto_id)
     producto.delete()
     return redirect('lista_productos') 
+
+from django.shortcuts import render
+
+def home(request):
+    return render(request, 'index.html')  # Asegúrate de tener este template
