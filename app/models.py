@@ -22,3 +22,38 @@ class Producto(models.Model):
 
     def __str__(self):
         return f"{self.titulo} - {self.artesano.username if self.artesano else 'Sin Artesano'}"
+
+class Pedido(models.Model):
+    usuario = models.ForeignKey(User, on_delete=models.CASCADE)
+    fecha = models.DateTimeField(auto_now_add=True)
+    total = models.DecimalField(max_digits=10, decimal_places=2, default=0)
+
+    def __str__(self):
+        return f'Pedido {self.id} - {self.usuario.username} - {self.fecha.strftime("%Y-%m-%d %H:%M:%S")}'
+
+
+class DetallePedido(models.Model):
+    pedido = models.ForeignKey(Pedido, on_delete=models.CASCADE, related_name='detalles')
+    producto = models.ForeignKey(Producto, on_delete=models.CASCADE)
+    cantidad = models.PositiveIntegerField()
+    precio_unitario = models.DecimalField(max_digits=10, decimal_places=2)
+
+    def subtotal(self):
+        return self.cantidad * self.precio_unitario
+
+    def __str__(self):
+        return f'{self.cantidad} x {self.producto.titulo} (Pedido {self.pedido.id})'
+    
+class Carrito(models.Model):
+    session_id = models.CharField(max_length=255, unique=True)
+
+    def total(self):
+        return sum(item.subtotal() for item in self.items.all())
+
+class CarritoItem(models.Model):
+    carrito = models.ForeignKey(Carrito, on_delete=models.CASCADE, related_name='items')
+    producto = models.ForeignKey('Producto', on_delete=models.CASCADE)
+    cantidad = models.PositiveIntegerField(default=1)
+
+    def subtotal(self):
+        return self.cantidad * self.producto.precio
