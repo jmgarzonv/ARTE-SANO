@@ -1,19 +1,38 @@
 import json
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
-from .models import Producto
+from .models import Pedido, Categoria, DetallePedido, Producto, Carrito, CarritoItem
 from .forms import ProductoForm
 from django.views.decorators.csrf import csrf_exempt  # Asegurar esta importación
 from django.http import JsonResponse
 from django.contrib.sessions.models import Session
 from .models import Carrito, CarritoItem, Producto
-
+from django.db.models import Sum
 
 # Vista para listar productos
 def lista_productos(request):
-    productos = Producto.objects.all()
-    return render(request, 'productos/lista_productos.html', {'productos': productos})
+    categoria_id = request.GET.get('categoria', '')
+    nombre = request.GET.get('nombre', '')
 
+    productos = Producto.objects.all()
+    
+    # Filtrar por categoría si se seleccionó una
+    if categoria_id.isdigit():  # Verifica si es un número
+        productos = productos.filter(categoria__id=int(categoria_id))
+
+    # Filtrar por nombre si se ingresó algo en la barra de búsqueda
+    if nombre:
+        productos = productos.filter(titulo__icontains=nombre)
+
+    # Obtener todas las categorías disponibles
+    categorias = Categoria.objects.all()
+
+    return render(request, 'productos/lista_productos.html', {
+        'productos': productos,
+        'categorias': categorias,
+        'categoria_seleccionada': categoria_id,
+        'nombre_buscado': nombre,
+    })
 # Vista para agregar productos
 def crear_producto(request):
     if request.method == 'POST':
@@ -44,7 +63,7 @@ def eliminar_producto(request, producto_id):
 
 def lista_pedidos(request):
     pedidos = Pedido.objects.all().prefetch_related('detalles')  # Muestra todos los pedidos
-    return render(request, 'pedidos/lista_pedidos.html', {'pedidos': pedidos})
+    return render(request, 'productos/pedidos/lista_pedidos.html', {'pedidos': pedidos})
 
 
 
@@ -118,20 +137,33 @@ def agregar_al_carrito(request, producto_id):
     carrito = obtener_carrito(request)
     producto = get_object_or_404(Producto, id=producto_id)
 
-    item, created = CarritoItem.objects.get_or_create(carrito=carrito, producto=producto)
-    if not created:
-        item.cantidad += 1
-        item.save()
+    cantidad = int(request.POST.get('cantidad', 1))  # Obtener la cantidad desde el formulario
 
-    return JsonResponse({'mensaje': 'Producto agregado al carrito'})
+    item, created = CarritoItem.objects.get_or_create(carrito=carrito, producto=producto)
+    
+    if not created:
+        item.cantidad += cantidad  # Sumar cantidad si ya existe en el carrito
+    else:
+        item.cantidad = cantidad
+
+    item.save()
+
+    return redirect('ver_carrito')  # Redirige al carrito después de agregar un producto
 
 def eliminar_del_carrito(request, producto_id):
     carrito = obtener_carrito(request)
     producto = get_object_or_404(Producto, id=producto_id)
 
-    CarritoItem.objects.filter(carrito=carrito, producto=producto).delete()
-    
-    return JsonResponse({'mensaje': 'Producto eliminado del carrito'})
+    item = CarritoItem.objects.filter(carrito=carrito, producto=producto).first()
+
+    if item:
+        if item.cantidad > 1:
+            item.cantidad -= 1  # Reduce la cantidad en 1 si hay más de una unidad
+            item.save()
+        else:
+            item.delete()  # Si solo hay una unidad, elimina el producto del carrito
+
+    return redirect('ver_carrito')  # Redirige de nuevo al carrito después de eliminar
 
 def ver_carrito(request):
     carrito = obtener_carrito(request)
@@ -157,8 +189,10 @@ def finalizar_compra(request):
     if not items:
         return redirect('ver_carrito')
 
-    pedido = Pedido.objects.create(total=0)
+    usuario = request.user if request.user.is_authenticated else None
+    pedido = Pedido.objects.create(usuario=usuario, total=0)
     total_pedido = 0
+    detalles = []
 
     for item in items:
         producto = item.producto
@@ -180,6 +214,7 @@ def finalizar_compra(request):
         )
 
         total_pedido += detalle.subtotal()
+        detalles.append(detalle)
 
     pedido.total = total_pedido
     pedido.save()
@@ -187,4 +222,51 @@ def finalizar_compra(request):
     # Vaciar el carrito después de la compra
     carrito.items.all().delete()
 
-    return redirect('lista_pedidos')  # Redirigir a la lista de pedidos
+    return render(request, 'productos/detalle_compra.html', {
+        'pedido': pedido,
+        'detalles': detalles
+    })
+
+
+
+
+def productos_mas_vendidos(request):
+    productos_vendidos = (
+        DetallePedido.objects.values('producto__titulo')
+        .annotate(total_vendido=Sum('cantidad'))
+        .order_by('-total_vendido')[:10]  # Obtener los 10 más vendidos
+    )
+
+    return render(request, 'productos/productos_mas_vendidos.html', {
+        'productos_vendidos': productos_vendidos
+    })
+
+def obtener_wishlist(request):
+    return request.session.get('wishlist', [])  # Obtener la wishlist desde la sesión
+
+def guardar_wishlist(request, wishlist):
+    request.session['wishlist'] = wishlist  # Guardar en la sesión
+    request.session.modified = True  # Asegurar que Django guarde los cambios
+
+def agregar_a_wishlist(request, producto_id):
+    wishlist = obtener_wishlist(request)
+
+    if producto_id not in wishlist:
+        wishlist.append(producto_id)  # Agregar producto si no está en la lista
+
+    guardar_wishlist(request, wishlist)
+    return redirect('ver_wishlist')
+
+def eliminar_de_wishlist(request, producto_id):
+    wishlist = obtener_wishlist(request)
+
+    if producto_id in wishlist:
+        wishlist.remove(producto_id)  # Eliminar producto de la lista
+
+    guardar_wishlist(request, wishlist)
+    return redirect('ver_wishlist')
+
+def ver_wishlist(request):
+    wishlist = obtener_wishlist(request)
+    productos = Producto.objects.filter(id__in=wishlist)  # Obtener productos guardados
+    return render(request, 'productos/wishlist.html', {'productos': productos})

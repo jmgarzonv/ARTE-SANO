@@ -24,7 +24,7 @@ class Producto(models.Model):
         return f"{self.titulo} - {self.artesano.username if self.artesano else 'Sin Artesano'}"
 
 class Pedido(models.Model):
-    usuario = models.ForeignKey(User, on_delete=models.CASCADE)
+    usuario = models.ForeignKey(User, on_delete=models.CASCADE, null=True, blank=True)
     fecha = models.DateTimeField(auto_now_add=True)
     total = models.DecimalField(max_digits=10, decimal_places=2, default=0)
 

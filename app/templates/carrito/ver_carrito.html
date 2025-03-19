@@ -19,7 +19,11 @@
             <td>${{ item.producto.precio }}</td>
             <td>${{ item.subtotal }}</td>
             <td>
-                <a href="{% url 'eliminar_del_carrito' item.producto.id %}">Eliminar</a>
+                <!-- Botón para eliminar un producto -->
+                <form action="{% url 'eliminar_del_carrito' item.producto.id %}" method="post">
+                    {% csrf_token %}
+                    <button type="submit">Eliminar</button>
+                </form>
             </td>
         </tr>
         {% endfor %}
