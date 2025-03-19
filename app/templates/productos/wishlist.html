@@ -1,8 +1,6 @@
 {% extends 'base.html' %}
-
 {% block content %}
 <h2>Tu Wishlist ❤️</h2>
-
 {% if productos %}
     <table border="1">
         <tr>
@@ -27,6 +25,5 @@
 {% else %}
     <p>No tienes productos en tu Wishlist.</p>
 {% endif %}
-
 <a href="{% url 'lista_productos' %}">Volver a la tienda</a>
 {% endblock %}
