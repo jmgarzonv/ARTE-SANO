@@ -17,9 +17,9 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include
 from django.conf import settings
-from app.views import home  # Importa la vista de la página de inicio
+from app.views import home, registro, iniciar_sesion, cerrar_sesion  # Importa la vista de la página de inicio
 from django.conf.urls.static import static
-from app.views import home  # Importa la vista de la página de inicio
+
 
 urlpatterns = [
     path('admin/', admin.site.urls),

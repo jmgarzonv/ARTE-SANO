@@ -2,12 +2,16 @@ import json
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from .models import Pedido, Categoria, DetallePedido, Producto, Carrito, CarritoItem
-from .forms import ProductoForm
+from .forms import ProductoForm, RegisterForm, LoginForm
 from django.views.decorators.csrf import csrf_exempt  # Asegurar esta importación
 from django.http import JsonResponse
 from django.contrib.sessions.models import Session
 from .models import Carrito, CarritoItem, Producto
 from django.db.models import Sum
+from django.contrib.auth import login, authenticate, logout
+from django.contrib.auth.forms import AuthenticationForm
+from django.contrib import messages
+from django.urls import reverse
 
 # Vista para listar productos
 def lista_productos(request):
@@ -270,3 +274,41 @@ def ver_wishlist(request):
     wishlist = obtener_wishlist(request)
     productos = Producto.objects.filter(id__in=wishlist)  # Obtener productos guardados
     return render(request, 'productos/wishlist.html', {'productos': productos})
+
+def registro(request):
+    if request.method == 'POST':
+        form = RegisterForm(request.POST)
+        try:
+            print(form.is_valid())
+            if form.is_valid():
+                print(form.errors)
+                user = form.save()
+                login(request, user)
+                print(request.user.is_authenticated)
+                messages.success(request, "¡Registro exitoso! Bienvenido a la tienda.")
+                print("Redirigiendo a lista_productos")
+                print(reverse('lista_productos'))
+                return redirect(reverse('lista_productos'))
+        except Exception as e:
+            messages.error(request, f"Ocurrió un error durante el registro: {e}")
+    else:
+        form = RegisterForm()
+    return render(request, 'login/registro.html', {'form': form})
+
+def iniciar_sesion(request):
+    form = AuthenticationForm()
+
+    if request.method == 'POST':
+        form = LoginForm(data=request.POST)
+        if form.is_valid():
+            user = form.get_user()
+            login(request, user)
+            return redirect('lista_productos')
+    else:
+        form = LoginForm()
+    return render(request, 'login/login.html', {'form': form})
+
+@login_required
+def cerrar_sesion(request):
+    logout(request)
+    return redirect('iniciar_sesion')

@@ -42,6 +42,8 @@ INSTALLED_APPS = [
     'app', 
 ]
 
+AUTH_USER_MODEL = 'app.Usuario'
+
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
@@ -130,3 +132,4 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 # Configuración de archivos estáticos
 STATIC_URL = '/static/'
 STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static')]
+STATIC_ROOT = BASE_DIR / 'staticfiles'
