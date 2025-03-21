@@ -30,6 +30,6 @@ python manage.py runserver
 
 
 ```
-## Finalmente abre el navegador e ingresa a la pagina
+## Finalmente abre el navegador e ingresa a la pagina.
 
 
