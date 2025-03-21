@@ -30,6 +30,6 @@ python manage.py runserver
 
 
 ```
-## Finalmente abre el navegador con http://127.0.0.1:8000/
+## Finalmente abre el navegador e ingresa a la pagina
 
 
