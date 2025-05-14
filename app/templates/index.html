@@ -1,0 +1,38 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Inicio | ARTE-SANO</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- Bootstrap 5 -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+    <!-- Custom CSS opcional -->
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+</head>
+<body class="bg-light text-dark">
+
+    <!-- Botón de login en esquina superior derecha -->
+    <div class="position-absolute top-0 end-0 m-3">
+        <a href="{% url 'iniciar_sesion' %}" class="btn btn-outline-dark">
+            <i class="fas fa-user-circle me-2"></i>Iniciar sesión
+        </a>
+    </div>
+
+    <div class="container text-center d-flex flex-column justify-content-center align-items-center" style="height: 100vh;">
+        <h1 class="display-4 fw-bold text-success mb-3">🎨 Bienvenido a ARTE-SANO</h1>
+        <p class="lead mb-4">Explora nuestra colección de productos artesanales únicos y hechos con amor.</p>
+        <a href="{% url 'lista_productos' %}" class="btn btn-primary btn-lg">
+            🛍 Ver Productos
+        </a>
+    </div>
+
+    <!-- Bootstrap JS opcional -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
