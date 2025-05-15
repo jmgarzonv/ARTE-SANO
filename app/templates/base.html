@@ -26,6 +26,16 @@
                 </nav>
             </div>
 
+             {% if clima.temp != 'N/A' %}
+            <div class="bg-primary text-white text-center py-1">
+                🌤️ Medellín: {{ clima.temp }}°C, {{ clima.desc }}
+                {% if clima.icon %}
+                    <img src="https:{{ clima.icon }}" style="height:20px;">
+                {% endif %}
+            </div>
+            {% endif %}
+
+
             <!-- Botones de idioma -->
             <div class="text-end">
                 <form action="{% url 'cambiar_idioma' 'es' %}" method="post" class="d-inline">

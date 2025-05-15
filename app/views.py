@@ -16,6 +16,8 @@ from django.utils.translation import gettext as _
 from django.utils import translation
 from django.conf import settings
 from django.shortcuts import redirect
+import requests
+
 
 # Vista para listar productos
 def lista_productos(request):
@@ -321,3 +323,20 @@ def cambiar_idioma(request, idioma):
         translation.activate(idioma)  # activa el idioma para esta petición
         request.session['django_language'] = idioma  # guarda para las siguientes
     return redirect(request.META.get('HTTP_REFERER', '/'))
+
+def clima_medellin():
+    url = f"http://api.weatherapi.com/v1/current.json?key={settings.WEATHERAPI_KEY}&q=Medellin&lang=es"
+    try:
+        response = requests.get(url, timeout=5)
+        data = response.json()
+        return {
+            'temp': data['current']['temp_c'],
+            'desc': data['current']['condition']['text'],
+            'icon': data['current']['condition']['icon']
+        }
+    except Exception:
+        return {
+            'temp': 'N/A',
+            'desc': 'Sin conexión',
+            'icon': ''
+        }
