@@ -1,9 +1,10 @@
 {% extends 'base.html' %}
-{% load humanize %}  {# ← Asegúrate de tener esto al principio para poder usar intcomma #}
+{% load humanize %}
+{% load i18n %}
 
 {% block content %}
 <div class="container my-4">
-    <h2 class="mb-4">Tu Wishlist ❤️</h2>
+    <h2 class="mb-4">{% trans "Tu Wishlist ❤️" %}</h2>
 
     {% if productos %}
         <div class="row">
@@ -13,19 +14,19 @@
                         {% if producto.imagen %}
                             <img src="{{ producto.imagen.url }}" class="card-img-top" alt="{{ producto.titulo }}" style="max-height: 200px; object-fit: cover;">
                         {% else %}
-                            <div class="p-3 text-muted text-center">No hay imagen disponible</div>
+                            <div class="p-3 text-muted text-center">{% trans "No hay imagen disponible" %}</div>
                         {% endif %}
                         <div class="card-body">
                             <h5 class="card-title">{{ producto.titulo }}</h5>
                             <p class="card-text">
-                                <strong>Precio:</strong> ${{ producto.precio|floatformat:0|intcomma }}
+                                <strong>{% trans "Precio:" %}</strong> ${{ producto.precio|floatformat:0|intcomma }}
                             </p>
                         </div>
                         <div class="card-footer d-flex flex-column gap-2">
-                            <a href="{% url 'eliminar_de_wishlist' producto.id %}" class="btn btn-outline-danger">❌ Eliminar</a>
+                            <a href="{% url 'eliminar_de_wishlist' producto.id %}" class="btn btn-outline-danger">❌ {% trans "Eliminar" %}</a>
                             <form action="{% url 'agregar_al_carrito' producto.id %}" method="post">
                                 {% csrf_token %}
-                                <button type="submit" class="btn btn-outline-primary">🛒 Añadir al Carrito</button>
+                                <button type="submit" class="btn btn-outline-primary">🛒 {% trans "Añadir al Carrito" %}</button>
                             </form>
                         </div>
                     </div>
@@ -34,10 +35,10 @@
         </div>
     {% else %}
         <div class="alert alert-info">
-            No tienes productos en tu Wishlist.
+            {% trans "No tienes productos en tu Wishlist." %}
         </div>
     {% endif %}
 
-    <a href="{% url 'lista_productos' %}" class="btn btn-secondary mt-3">⬅️ Volver a la tienda</a>
+    <a href="{% url 'lista_productos' %}" class="btn btn-secondary mt-3">⬅️ {% trans "Volver a la tienda" %}</a>
 </div>
 {% endblock %}

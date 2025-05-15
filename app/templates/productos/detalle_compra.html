@@ -1,22 +1,23 @@
 {% extends 'base.html' %}
 {% load humanize %}
+{% load i18n %}
 
 {% block content %}
 <div class="container my-5">
     <div class="card shadow p-4">
-        <h2 class="mb-3 text-success">🧾 Resumen de tu Compra</h2>
+        <h2 class="mb-3 text-success">🧾 {% trans "Resumen de tu Compra" %}</h2>
 
-        <p><strong>Pedido #{{ pedido.id }}</strong></p>
-        <p><strong>Fecha:</strong> {{ pedido.fecha|date:"d/m/Y H:i" }}</p>
+        <p><strong>{% blocktrans %}Pedido #{{ pedido.id }}{% endblocktrans %}</strong></p>
+        <p><strong>{% trans "Fecha:" %}</strong> {{ pedido.fecha|date:"d/m/Y H:i" }}</p>
 
-        <h4 class="mt-4">🛍️ Productos Comprados</h4>
+        <h4 class="mt-4">🛍️ {% trans "Productos Comprados" %}</h4>
         <table class="table table-bordered table-hover mt-3">
             <thead class="table-light">
                 <tr>
-                    <th>Producto</th>
-                    <th>Cantidad</th>
-                    <th>Precio Unitario</th>
-                    <th>Subtotal</th>
+                    <th>{% trans "Producto" %}</th>
+                    <th>{% trans "Cantidad" %}</th>
+                    <th>{% trans "Precio Unitario" %}</th>
+                    <th>{% trans "Subtotal" %}</th>
                 </tr>
             </thead>
             <tbody>
@@ -32,11 +33,11 @@
         </table>
 
         <div class="text-end mt-3">
-            <h4 class="text-primary">💰 Total a Pagar: ${{ pedido.total|floatformat:0|intcomma }}</h4>
+            <h4 class="text-primary">💰 {% blocktrans %}Total a Pagar: ${{ pedido.total|floatformat:0|intcomma }}{% endblocktrans %}</h4>
         </div>
 
         <div class="mt-4">
-            <a href="{% url 'lista_productos' %}" class="btn btn-outline-primary">⬅️ Seguir Comprando</a>
+            <a href="{% url 'lista_productos' %}" class="btn btn-outline-primary">⬅️ {% trans "Seguir Comprando" %}</a>
         </div>
     </div>
 </div>

@@ -3,6 +3,8 @@ from .models import Producto, Usuario
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from django.conf import settings
 from django.contrib.auth import get_user_model
+from django.utils.translation import gettext as _
+
 
 class RegisterForm(UserCreationForm):
     class Meta:

@@ -12,6 +12,10 @@ from django.contrib.auth import login, authenticate, logout
 from django.contrib.auth.forms import AuthenticationForm
 from django.contrib import messages
 from django.urls import reverse
+from django.utils.translation import gettext as _
+from django.utils import translation
+from django.conf import settings
+from django.shortcuts import redirect
 
 # Vista para listar productos
 def lista_productos(request):
@@ -89,8 +93,7 @@ def comprar_producto(request):
                 productos = [{'producto_id': producto_id, 'cantidad': cantidad}]
 
             if not productos:
-                return JsonResponse({'error': 'No se enviaron productos'}, status=400)
-
+                return JsonResponse({'error': _('No se enviaron productos')}, status=400)   
             pedido = Pedido.objects.create(total=0)
             total_pedido = 0
 
@@ -101,7 +104,7 @@ def comprar_producto(request):
                 producto = get_object_or_404(Producto, id=producto_id)
 
                 if producto.stock < cantidad:
-                    return JsonResponse({'error': f'Stock insuficiente para {producto.titulo}'}, status=400)
+                    return JsonResponse({'error': _('Stock insuficiente para %(titulo)s') % {'titulo': producto.titulo}}, status=400)
 
                 producto.stock -= cantidad
                 producto.save()
@@ -119,15 +122,14 @@ def comprar_producto(request):
             pedido.save()
 
             if request.content_type == 'application/json':
-                return JsonResponse({'mensaje': 'Compra realizada con éxito', 'pedido_id': pedido.id})
+                return JsonResponse({'mensaje': _('Compra realizada con éxito'), 'pedido_id': pedido.id})
             else:
                 return redirect('lista_pedidos')  # Redirigir a la página de pedidos en HTML
 
         except Exception as e:
             return JsonResponse({'error': str(e)}, status=500)
 
-    return JsonResponse({'error': 'Método no permitido'}, status=405)
-
+    return JsonResponse({'error': _('Método no permitido')}, status=405)
 def obtener_carrito(request):
     session_id = request.session.session_key
     if not session_id:
@@ -203,8 +205,7 @@ def finalizar_compra(request):
         cantidad = item.cantidad
 
         if producto.stock < cantidad:
-            return JsonResponse({'error': f'Stock insuficiente para {producto.titulo}'}, status=400)
-
+            return JsonResponse({'error': _('Stock insuficiente para %(titulo)s') % {'titulo': producto.titulo}}, status=400)
         # Reducir stock
         producto.stock -= cantidad
         producto.save()
@@ -285,12 +286,12 @@ def registro(request):
                 user = form.save()
                 login(request, user)
                 print(request.user.is_authenticated)
-                messages.success(request, "¡Registro exitoso! Bienvenido a la tienda.")
+                messages.success(request, _("¡Registro exitoso! Bienvenido a la tienda."))
                 print("Redirigiendo a lista_productos")
                 print(reverse('lista_productos'))
                 return redirect(reverse('lista_productos'))
         except Exception as e:
-            messages.error(request, f"Ocurrió un error durante el registro: {e}")
+            messages.error(request, _("Ocurrió un error durante el registro: %(error)s") % {'error': e})
     else:
         form = RegisterForm()
     return render(request, 'login/registro.html', {'form': form})
@@ -312,3 +313,11 @@ def iniciar_sesion(request):
 def cerrar_sesion(request):
     logout(request)
     return redirect('iniciar_sesion')
+
+from django.utils import translation
+
+def cambiar_idioma(request, idioma):
+    if idioma in ['es', 'en']:
+        translation.activate(idioma)  # activa el idioma para esta petición
+        request.session['django_language'] = idioma  # guarda para las siguientes
+    return redirect(request.META.get('HTTP_REFERER', '/'))

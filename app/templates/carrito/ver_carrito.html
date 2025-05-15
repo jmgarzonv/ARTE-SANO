@@ -1,20 +1,21 @@
 {% extends 'base.html' %}
 {% load humanize %}
+{% load i18n %}
 
 {% block content %}
 <div class="container my-4">
-    <h2 class="mb-4">🛒 Tu Carrito de Compras</h2>
+    <h2 class="mb-4">🛒 {% trans "Tu Carrito de Compras" %}</h2>
 
     {% if items %}
         <div class="table-responsive">
             <table class="table table-striped align-middle">
                 <thead class="table-dark">
                     <tr>
-                        <th>Producto</th>
-                        <th>Cantidad</th>
-                        <th>Precio Unitario</th>
-                        <th>Subtotal</th>
-                        <th>Acciones</th>
+                        <th>{% trans "Producto" %}</th>
+                        <th>{% trans "Cantidad" %}</th>
+                        <th>{% trans "Precio Unitario" %}</th>
+                        <th>{% trans "Subtotal" %}</th>
+                        <th>{% trans "Acciones" %}</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -27,7 +28,7 @@
                         <td>
                             <form action="{% url 'eliminar_del_carrito' item.producto.id %}" method="post" class="d-inline">
                                 {% csrf_token %}
-                                <button type="submit" class="btn btn-outline-danger btn-sm">❌ Eliminar</button>
+                                <button type="submit" class="btn btn-outline-danger btn-sm">❌ {% trans "Eliminar" %}</button>
                             </form>
                         </td>
                     </tr>
@@ -37,21 +38,21 @@
         </div>
 
         <div class="text-end mb-4">
-            <h4>Total: <span class="text-success">${{ carrito.total|floatformat:0|intcomma }}</span></h4>
+            <h4>{% blocktrans %}Total: <span class="text-success">${{ carrito.total|floatformat:0|intcomma }}</span>{% endblocktrans %}</h4>
         </div>
 
         <form action="{% url 'finalizar_compra' %}" method="post" class="text-end">
             {% csrf_token %}
-            <button type="submit" class="btn btn-success">✅ Finalizar Compra</button>
+            <button type="submit" class="btn btn-success">✅ {% trans "Finalizar Compra" %}</button>
         </form>
     {% else %}
         <div class="alert alert-info">
-            Tu carrito está vacío.
+            {% trans "Tu carrito está vacío." %}
         </div>
     {% endif %}
 
     <div class="mt-3">
-        <a href="{% url 'lista_productos' %}" class="btn btn-secondary">⬅️ Volver a la tienda</a>
+        <a href="{% url 'lista_productos' %}" class="btn btn-secondary">⬅️ {% trans "Volver a la tienda" %}</a>
     </div>
 </div>
 {% endblock %}

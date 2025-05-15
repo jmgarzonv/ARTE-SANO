@@ -1,7 +1,7 @@
 from django.urls import path
 from .views import (
     lista_pedidos, lista_productos, crear_producto, eliminar_producto, comprar_producto,ver_wishlist,agregar_a_wishlist,eliminar_de_wishlist,
-    ver_carrito, agregar_al_carrito,productos_mas_vendidos,finalizar_compra, eliminar_del_carrito, iniciar_sesion, cerrar_sesion ,registro # Asegurar estas importaciones
+    ver_carrito, agregar_al_carrito,productos_mas_vendidos,finalizar_compra, eliminar_del_carrito, iniciar_sesion, cerrar_sesion ,registro, cambiar_idioma # Asegurar estas importaciones
 )
 
 urlpatterns = [
@@ -22,11 +22,8 @@ urlpatterns = [
     path('wishlist/eliminar/<int:producto_id>/', eliminar_de_wishlist, name='eliminar_de_wishlist'),
     path('registro/', registro, name='registro'),
     path('login/', iniciar_sesion, name='iniciar_sesion'),
-    path('logout/', cerrar_sesion, name='cerrar_sesion')
-    
-
-
-
+    path('logout/', cerrar_sesion, name='cerrar_sesion'),
+    path('cambiar-idioma/<str:idioma>/', cambiar_idioma, name='cambiar_idioma'),
 
 ]
 
