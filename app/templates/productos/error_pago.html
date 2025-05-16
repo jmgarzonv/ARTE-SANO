@@ -1,0 +1,14 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container mt-5">
+    <div class="alert alert-danger shadow p-4">
+        <h2>❌ Error al procesar el pago</h2>
+        <p>{{ mensaje }}</p>
+
+        <div class="mt-4">
+            <a href="{% url 'ver_carrito' %}" class="btn btn-outline-danger">⬅️ Volver al Carrito</a>
+        </div>
+    </div>
+</div>
+{% endblock %}

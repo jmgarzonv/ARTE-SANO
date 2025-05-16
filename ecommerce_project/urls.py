@@ -25,6 +25,10 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('', home, name='home'),  # Agrega esta línea para definir la página de inicio
     path('productos/', include('app.urls')),  # Asegúrate de que los productos están en un `include`
+    
+    path('login/', iniciar_sesion, name='iniciar_sesion'),
+    path('registro/', registro, name='registro'),
+    path('logout/', cerrar_sesion, name='cerrar_sesion'),
 ]
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

@@ -1,3 +1,4 @@
+{# app/templates/carrito/ver_carrito.html #}
 {% extends 'base.html' %}
 {% load humanize %}
 
@@ -37,12 +38,31 @@
         </div>
 
         <div class="text-end mb-4">
-            <h4>Total: <span class="text-success">${{ carrito.total|floatformat:0|intcomma }}</span></h4>
+            <h4>Total: <span class="text-success">
+                ${{ carrito.total|floatformat:0|intcomma }}
+            </span></h4>
         </div>
 
-        <form action="{% url 'finalizar_compra' %}" method="post" class="text-end">
+        <form id="checkout-form" action="{% url 'finalizar_compra' %}" method="post" class="text-end">
             {% csrf_token %}
-            <button type="submit" class="btn btn-success">✅ Finalizar Compra</button>
+
+            <div class="mb-3 text-start">
+                <label class="form-label me-3">Método de pago:</label>
+                <input type="radio" name="metodo_pago" id="pago-saldo" value="saldo" checked>
+                <label for="pago-saldo" class="me-3">Saldo disponible</label>
+                <input type="radio" name="metodo_pago" id="pago-cheque" value="cheque">
+                <label for="pago-cheque">Cheque</label>
+            </div>
+
+            <div id="cheque-input" class="mb-3 text-start" style="display:none;">
+                <label for="check_number" class="form-label">Número de cheque:</label>
+                <input type="text" name="check_number" id="check_number"
+                       class="form-control w-auto d-inline" placeholder="123456">
+            </div>
+
+            <button id="submit-btn" type="submit" class="btn btn-success">
+                ✅ Pagar con Saldo
+            </button>
         </form>
     {% else %}
         <div class="alert alert-info">
@@ -54,4 +74,30 @@
         <a href="{% url 'lista_productos' %}" class="btn btn-secondary">⬅️ Volver a la tienda</a>
     </div>
 </div>
+
+<script>
+  const radioSaldo  = document.getElementById('pago-saldo');
+  const radioCheque = document.getElementById('pago-cheque');
+  const chequeInput = document.getElementById('cheque-input');
+  const submitBtn   = document.getElementById('submit-btn');
+
+  function updateForm() {
+    if (radioCheque.checked) {
+      chequeInput.style.display = 'block';
+      submitBtn.textContent = '✅ Pagar con Cheque';
+      submitBtn.classList.remove('btn-success');
+      submitBtn.classList.add('btn-primary');
+    } else {
+      chequeInput.style.display = 'none';
+      submitBtn.textContent = '✅ Pagar con Saldo';
+      submitBtn.classList.remove('btn-primary');
+      submitBtn.classList.add('btn-success');
+    }
+  }
+
+  radioSaldo.addEventListener('change', updateForm);
+  radioCheque.addEventListener('change', updateForm);
+  // Inicializar al cargar
+  updateForm();
+</script>
 {% endblock %}

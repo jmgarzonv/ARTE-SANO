@@ -46,6 +46,7 @@ class DetallePedido(models.Model):
         return f'{self.cantidad} x {self.producto.titulo} (Pedido {self.pedido.id})'
     
 class Carrito(models.Model):
+    usuario = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, null=True, blank=True)
     session_id = models.CharField(max_length=255, unique=True)
 
     def total(self):
