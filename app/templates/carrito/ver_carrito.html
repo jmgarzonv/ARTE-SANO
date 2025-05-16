@@ -38,7 +38,12 @@
         </div>
 
         <div class="text-end mb-4">
-            <h4>{% blocktrans %}Total: <span class="text-success">${{ carrito.total|floatformat:0|intcomma }}</span>{% endblocktrans %}</h4>
+            <h4>
+            {% blocktrans %}Total: <span class="text-success">
+                ${{ carrito.total()|floatformat:0|intcomma }}
+            </span>{% endblocktrans %}
+            </h4>
+
         </div>
 
         <form id="checkout-form" action="{% url 'finalizar_compra' %}" method="post" class="text-end">
