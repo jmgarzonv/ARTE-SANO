@@ -7,10 +7,6 @@ venv/
 db.sqlite3
 *.sqlite3
 
-# Migraciones de Django
-**/migrations/*
-!**/migrations/__init__.py
-
 # Archivos compilados de Python
 *.pyc
 *.pyo
@@ -33,7 +29,7 @@ __pycache__/
 
 # Archivos de static y media generados
 staticfiles/
-media/
+
 
 # Archivos de despliegue
 *.pem
