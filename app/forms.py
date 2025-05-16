@@ -16,8 +16,15 @@ class ProductoForm(forms.ModelForm):
     class Meta:
         model = Producto
         fields = ['titulo', 'descripcion', 'precio', 'stock', 'categoria', 'imagen']
-
+        labels = {
+            'titulo': _('Título'),
+            'descripcion': _('Descripción'),
+            'precio': _('Precio'),
+            'stock': _('Stock'),
+            'categoria': _('Categoría'),
+            'imagen': _('Imagen'),
+        }
 
 class LoginForm(AuthenticationForm):
-    username = forms.CharField(label="Usuario", max_length=150)
-    password = forms.CharField(label="Contraseña", widget=forms.PasswordInput)
+    username = forms.CharField(label=_("Usuario"), max_length=150)
+    password = forms.CharField(label=_("Contraseña"), widget=forms.PasswordInput)

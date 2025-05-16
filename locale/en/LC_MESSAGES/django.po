@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-05-15 16:06-0500\n"
+"POT-Creation-Date: 2025-05-16 04:31-0500\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -18,62 +18,98 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
+#: .\app\forms.py:20
+msgid "Título"
+msgstr "Title"
+
+#: .\app\forms.py:21
+msgid "Descripción"
+msgstr "Description"
+
+#: .\app\forms.py:22
+#, fuzzy
+
+msgid "Precio"
+msgstr "Price:"
+
+#: .\app\forms.py:23
+#, fuzzy
+#| msgid "Stock:"
+msgid "Stock"
+msgstr "Stock:"
+
+#: .\app\forms.py:24 .\app\templates\productos\lista_productos.html:15
+msgid "Categoría"
+msgstr "Category"
+
+#: .\app\forms.py:25
+msgid "Imagen"
+msgstr "Image"
+
+#: .\app\forms.py:29
+msgid "Usuario"
+msgstr "Username"
+
+#: .\app\forms.py:30
+msgid "Contraseña"
+msgstr "Password"
+
 #: .\app\templates\base.html:8
 msgid "Mi E-commerce"
 msgstr "My E-commerce"
 
-#: .\app\templates\base.html:19
+#: .\app\templates\base.html:20
 msgid "Bienvenido a la tienda de artesanías"
 msgstr "Welcome to the craft shop"
 
-#: .\app\templates\base.html:21 .\app\templates\index.html:7
+#: .\app\templates\base.html:22 .\app\templates\index.html:7
 msgid "Inicio"
 msgstr "Home"
 
-#: .\app\templates\base.html:22
+#: .\app\templates\base.html:23
 msgid "Nuevo Producto"
 msgstr "New Product"
 
-#: .\app\templates\base.html:23
+#: .\app\templates\base.html:24
 msgid "Wishlist"
 msgstr "Wishlist"
 
-#: .\app\templates\base.html:24
+#: .\app\templates\base.html:25
 msgid "Carrito"
 msgstr "Cart"
 
 #: .\app\templates\carrito\ver_carrito.html:7
 msgid "Tu Carrito de Compras"
-msgstr ""
+msgstr "Your Shopping Cart"
 
 #: .\app\templates\carrito\ver_carrito.html:14
 #: .\app\templates\productos\detalle_compra.html:17
 #: .\app\templates\productos\productos_mas_vendidos.html:13
 msgid "Producto"
-msgstr ""
+msgstr "Product"
 
 #: .\app\templates\carrito\ver_carrito.html:15
 #: .\app\templates\productos\detalle_compra.html:18
 msgid "Cantidad"
-msgstr ""
+msgstr "Quantity"
 
 #: .\app\templates\carrito\ver_carrito.html:16
 #: .\app\templates\productos\detalle_compra.html:19
 msgid "Precio Unitario"
-msgstr ""
+msgstr "Unit Price"
 
 #: .\app\templates\carrito\ver_carrito.html:17
 #: .\app\templates\productos\detalle_compra.html:20
 msgid "Subtotal"
-msgstr ""
+msgstr "Subtotal"
 
 #: .\app\templates\carrito\ver_carrito.html:18
 msgid "Acciones"
-msgstr ""
+msgstr "Actions"
 
 #: .\app\templates\carrito\ver_carrito.html:31
 #: .\app\templates\productos\lista_productos.html:55
-#: .\app\templates\productos\wishlist.html:26
+#: .\app\templates\productos\wishlist.html:27
 msgid "Eliminar"
 msgstr "Delete"
 
@@ -83,99 +119,121 @@ msgid ""
 "Total: <span class=\"text-success\">$"
 "%(carrito.total|floatformat:0|intcomma)s</span>"
 msgstr ""
+"Total: <span class=\"text-success\">$"
+"%(carrito.total|floatformat:0|intcomma)s</span>"
 
-#: .\app\templates\carrito\ver_carrito.html:46
-msgid "Finalizar Compra"
-msgstr "Checkout"
+#: .\app\templates\carrito\ver_carrito.html:48
+#, fuzzy
+#| msgid "Método no permitido"
+msgid "Método de pago:"
+msgstr "Method not allowed"
 
 #: .\app\templates\carrito\ver_carrito.html:50
+#, fuzzy
+#| msgid "No hay imagen disponible"
+msgid "Saldo disponible"
+msgstr "No image available"
+
+#: .\app\templates\carrito\ver_carrito.html:52
+msgid "Cheque"
+msgstr ""
+
+#: .\app\templates\carrito\ver_carrito.html:56
+msgid "Número de cheque:"
+msgstr ""
+
+#: .\app\templates\carrito\ver_carrito.html:62
+msgid "Pagar con Saldo"
+msgstr ""
+
+#: .\app\templates\carrito\ver_carrito.html:67
 msgid "Tu carrito está vacío."
 msgstr "Your cart is empty."
 
-#: .\app\templates\carrito\ver_carrito.html:55
+#: .\app\templates\carrito\ver_carrito.html:72
 #: .\app\templates\productos\productos_mas_vendidos.html:34
-#: .\app\templates\productos\wishlist.html:42
+#: .\app\templates\productos\wishlist.html:43
 msgid "Volver a la tienda"
-msgstr ""
+msgstr "Back to the store"
 
-#: .\app\templates\index.html:24
+#: .\app\templates\index.html:23
 msgid "Iniciar sesión"
-msgstr ""
+msgstr "Log In"
+
+#: .\app\templates\index.html:28
+msgid "Bienvenido a ARTE-SANO"
+msgstr "Welcome to ARTE-SANO"
 
 #: .\app\templates\index.html:29
-msgid "Bienvenido a ARTE-SANO"
-msgstr ""
-
-#: .\app\templates\index.html:30
 msgid ""
 "Explora nuestra colección de productos artesanales únicos y hechos con amor."
-msgstr ""
+msgstr "Explore our collection of unique, handcrafted products made with love."
 
-#: .\app\templates\index.html:32
+#: .\app\templates\index.html:31
 msgid "Ver Productos"
-msgstr ""
+msgstr "View Products"
 
 #: .\app\templates\login\login.html:7
 msgid "Iniciar Sesión"
-msgstr ""
+msgstr "Log In"
 
 #: .\app\templates\login\login.html:24
 msgid "Ingresar"
-msgstr ""
+msgstr "Enter"
 
 #: .\app\templates\login\login.html:30
 msgid "¿No tienes cuenta? <strong>Regístrate</strong>"
-msgstr ""
+msgstr "Don't have an account? <strong>Sign Up</strong>"
 
 #: .\app\templates\login\registro.html:7
 msgid "Registro"
-msgstr ""
+msgstr "Register"
 
 #: .\app\templates\login\registro.html:24
 msgid "Registrarse"
-msgstr ""
+msgstr "Sign Up"
 
 #: .\app\templates\login\registro.html:30
 msgid "¿Ya tienes cuenta? <strong>Inicia sesión</strong>"
-msgstr ""
+msgstr "Already have an account? <strong>Log In</strong>"
 
 #: .\app\templates\productos\crear_producto.html:6
 msgid "Agregar Nuevo Producto"
-msgstr ""
+msgstr "Add New Product"
 
 #: .\app\templates\productos\crear_producto.html:22
 msgid "Guardar Producto"
-msgstr ""
+msgstr "Save Product"
 
 #: .\app\templates\productos\crear_producto.html:23
 msgid "Volver a la lista"
-msgstr ""
+msgstr "Back to the list"
 
 #: .\app\templates\productos\detalle_compra.html:8
 msgid "Resumen de tu Compra"
-msgstr ""
+msgstr "Purchase Summary"
 
 #: .\app\templates\productos\detalle_compra.html:10
 #, python-format
 msgid "Pedido #%(pedido.id)s"
-msgstr ""
+msgstr "Order #%(pedido.id)s"
 
 #: .\app\templates\productos\detalle_compra.html:11
 msgid "Fecha:"
-msgstr ""
+msgstr "Date:"
 
 #: .\app\templates\productos\detalle_compra.html:13
 msgid "Productos Comprados"
-msgstr ""
+msgstr "Purchased Products"
 
 #: .\app\templates\productos\detalle_compra.html:36
 #, python-format
 msgid "Total a Pagar: $%(pedido.total|floatformat:0|intcomma)s"
-msgstr ""
+msgstr "Total to Pay: $%(pedido.total|floatformat:0|intcomma)s"
 
-#: .\app\templates\productos\detalle_compra.html:40
+#: .\app\templates\productos\detalle_compra.html:48
 msgid "Seguir Comprando"
-msgstr ""
+msgstr "Continue Shopping"
 
 #: .\app\templates\productos\lista_productos.html:7
 msgid "Agregar Producto"
@@ -183,57 +241,53 @@ msgstr "Add Product"
 
 #: .\app\templates\productos\lista_productos.html:8
 msgid "Ver Productos Más Vendidos"
-msgstr ""
+msgstr "View Top Selling Products"
 
 #: .\app\templates\productos\lista_productos.html:12
 msgid "Filtros"
-msgstr ""
-
-#: .\app\templates\productos\lista_productos.html:15
-msgid "Categoría"
-msgstr ""
+msgstr "Filters"
 
 #: .\app\templates\productos\lista_productos.html:17
 msgid "Todas"
-msgstr ""
+msgstr "All"
 
 #: .\app\templates\productos\lista_productos.html:27
 msgid "Nombre"
-msgstr ""
+msgstr "Name"
 
 #: .\app\templates\productos\lista_productos.html:28
 msgid "Buscar por nombre"
-msgstr ""
+msgstr "Search by name"
 
 #: .\app\templates\productos\lista_productos.html:32
 msgid "Filtrar"
-msgstr ""
+msgstr "Filter"
 
 #: .\app\templates\productos\lista_productos.html:33
 msgid "Quitar filtros"
-msgstr ""
+msgstr "Clear filters"
 
 #: .\app\templates\productos\lista_productos.html:45
-#: .\app\templates\productos\wishlist.html:17
+#: .\app\templates\productos\wishlist.html:18
 msgid "No hay imagen disponible"
 msgstr "No image available"
 
 #: .\app\templates\productos\lista_productos.html:50
-#: .\app\templates\productos\wishlist.html:22
+#: .\app\templates\productos\wishlist.html:23
 msgid "Precio:"
 msgstr "Price:"
 
 #: .\app\templates\productos\lista_productos.html:51
 msgid "Stock:"
-msgstr ""
+msgstr "Stock:"
 
 #: .\app\templates\productos\lista_productos.html:51
 msgid "unidades"
-msgstr ""
+msgstr "units"
 
 #: .\app\templates\productos\lista_productos.html:52
 msgid "Categoría:"
-msgstr ""
+msgstr "Category:"
 
 #: .\app\templates\productos\lista_productos.html:61
 msgid "Añadir al carrito"
@@ -266,11 +320,11 @@ msgstr ""
 
 #: .\app\templates\productos\pedidos\lista_pedidos.html:31
 msgid "Total:"
-msgstr ""
+msgstr "Total:"
 
 #: .\app\templates\productos\pedidos\lista_pedidos.html:39
 msgid "No tienes pedidos aún."
-msgstr ""
+msgstr "You have no orders yet."
 
 #: .\app\templates\productos\productos_mas_vendidos.html:6
 msgid "Productos Más Vendidos"
@@ -284,43 +338,43 @@ msgstr "Units Sold"
 msgid "No hay productos vendidos aún."
 msgstr "No products sold yet."
 
-#: .\app\templates\productos\wishlist.html:7
+#: .\app\templates\productos\wishlist.html:8
 msgid "Tu Wishlist ❤️"
 msgstr "Your Wishlist ❤️"
 
-#: .\app\templates\productos\wishlist.html:29
+#: .\app\templates\productos\wishlist.html:30
 msgid "Añadir al Carrito"
-msgstr ""
+msgstr "Add to Cart"
 
-#: .\app\templates\productos\wishlist.html:38
+#: .\app\templates\productos\wishlist.html:39
 msgid "No tienes productos en tu Wishlist."
-msgstr ""
+msgstr "You have no products in your Wishlist."
 
-#: .\app\views.py:93
+#: .\app\views.py:101
 msgid "No se enviaron productos"
-msgstr ""
+msgstr "No products were submitted"
 
-#: .\app\views.py:104 .\app\views.py:205
+#: .\app\views.py:112
 #, python-format
 msgid "Stock insuficiente para %(titulo)s"
-msgstr ""
+msgstr "Insufficient stock for %(titulo)s"
 
-#: .\app\views.py:122
+#: .\app\views.py:130
 msgid "Compra realizada con éxito"
-msgstr ""
+msgstr "Purchase completed successfully"
 
-#: .\app\views.py:129
+#: .\app\views.py:137
 msgid "Método no permitido"
-msgstr ""
+msgstr "Method not allowed"
 
-#: .\app\views.py:286
+#: .\app\views.py:339
 msgid "¡Registro exitoso! Bienvenido a la tienda."
-msgstr ""
+msgstr "Registration successful! Welcome to the store."
 
-#: .\app\views.py:291
+#: .\app\views.py:344
 #, python-format
 msgid "Ocurrió un error durante el registro: %(error)s"
-msgstr ""
+msgstr "An error occurred during registration: %(error)s"
 
 #: .\venv\Lib\site-packages\django\contrib\messages\apps.py:16
 msgid "Messages"
@@ -1545,3 +1599,10 @@ msgstr ""
 #: .\venv\Lib\site-packages\django\views\templates\default_urlconf.html:236
 msgid "Connect, get help, or contribute"
 msgstr ""
+
+#~ msgid "Finalizar Compra"
+#~ msgstr "Checkout"
+
+#, python-format
+#~ msgid "%(cantidad)s x %(titulo)s"
+#~ msgstr "%(cantidad)s x %(titulo)s"
