@@ -1,0 +1,104 @@
+{% extends 'base.html' %}
+{% load humanize %}
+{% load i18n %}
+
+{% block content %}
+<div class="container my-4">
+    <h2 class="mb-4">🛒 {% trans "Tu Carrito de Compras" %}</h2>
+
+    {% if items %}
+        <div class="table-responsive">
+            <table class="table table-striped align-middle">
+                <thead class="table-dark">
+                    <tr>
+                        <th>{% trans "Producto" %}</th>
+                        <th>{% trans "Cantidad" %}</th>
+                        <th>{% trans "Precio Unitario" %}</th>
+                        <th>{% trans "Subtotal" %}</th>
+                        <th>{% trans "Acciones" %}</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for item in items %}
+                    <tr>
+                        <td>{{ item.producto.titulo }}</td>
+                        <td>{{ item.cantidad }}</td>
+                        <td>${{ item.producto.precio|floatformat:0|intcomma }}</td>
+                        <td>${{ item.subtotal|floatformat:0|intcomma }}</td>
+                        <td>
+                            <form action="{% url 'eliminar_del_carrito' item.producto.id %}" method="post" class="d-inline">
+                                {% csrf_token %}
+                                <button type="submit" class="btn btn-outline-danger btn-sm">❌ {% trans "Eliminar" %}</button>
+                            </form>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+        <div class="text-end mb-4">
+            <h4>{% blocktrans %}Total: <span class="text-success">${{ carrito.total|floatformat:0|intcomma }}</span>{% endblocktrans %}</h4>
+        </div>
+
+        <form id="checkout-form" action="{% url 'finalizar_compra' %}" method="post" class="text-end">
+            {% csrf_token %}
+
+            <div class="mb-3 text-start">
+                <label class="form-label me-3">{% trans "Método de pago:" %}</label>
+                <input type="radio" name="metodo_pago" id="pago-saldo" value="saldo" checked>
+                <label for="pago-saldo" class="me-3">{% trans "Saldo disponible" %}</label>
+                <input type="radio" name="metodo_pago" id="pago-cheque" value="cheque">
+                <label for="pago-cheque">{% trans "Cheque" %}</label>
+            </div>
+
+            <div id="cheque-input" class="mb-3 text-start" style="display:none;">
+                <label for="check_number" class="form-label">{% trans "Número de cheque:" %}</label>
+                <input type="text" name="check_number" id="check_number"
+                       class="form-control w-auto d-inline" placeholder="123456">
+            </div>
+
+            <button id="submit-btn" type="submit" class="btn btn-success">
+                ✅ {% trans "Pagar con Saldo" %}
+            </button>
+        </form>
+    {% else %}
+        <div class="alert alert-info">
+            {% trans "Tu carrito está vacío." %}
+        </div>
+    {% endif %}
+
+    <div class="mt-3">
+        <a href="{% url 'lista_productos' %}" class="btn btn-secondary">⬅️ {% trans "Volver a la tienda" %}</a>
+    </div>
+</div>
+
+<script>
+  // Para traducción dinámica en JS se recomienda cargar el archivo de traducción en la plantilla.
+  // Aquí asumo que gettext está disponible (configurar Django i18n JS según docs)
+  const radioSaldo  = document.getElementById('pago-saldo');
+  const radioCheque = document.getElementById('pago-cheque');
+  const chequeInput = document.getElementById('cheque-input');
+  const submitBtn   = document.getElementById('submit-btn');
+
+  function updateForm() {
+    if (radioCheque.checked) {
+      chequeInput.style.display = 'block';
+      submitBtn.textContent = '✅ ' + gettext('Pagar con Cheque');
+      submitBtn.classList.remove('btn-success');
+      submitBtn.classList.add('btn-primary');
+    } else {
+      chequeInput.style.display = 'none';
+      submitBtn.textContent = '✅ ' + gettext('Pagar con Saldo');
+      submitBtn.classList.remove('btn-primary');
+      submitBtn.classList.add('btn-success');
+    }
+  }
+
+  radioSaldo.addEventListener('change', updateForm);
+  radioCheque.addEventListener('change', updateForm);
+
+  // Inicializar estado al cargar
+  updateForm();
+</script>
+{% endblock %}

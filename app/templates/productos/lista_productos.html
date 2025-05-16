@@ -1,0 +1,74 @@
+{% extends 'base.html' %}
+{% load humanize %}
+{% load i18n %}
+
+{% block content %}
+<div class="d-flex justify-content-between mb-3">
+    <a href="{% url 'crear_producto' %}" class="btn btn-success">➕ {% trans "Agregar Producto" %}</a>
+    <a href="{% url 'productos_mas_vendidos' %}" class="btn btn-warning">🔥 {% trans "Ver Productos Más Vendidos" %}</a>
+</div>
+
+<div class="card p-3 mb-4">
+    <h4>{% trans "Filtros" %}</h4>
+    <form method="GET" action="{% url 'lista_productos' %}" class="row g-3">
+        <div class="col-md-4">
+            <label for="categoria" class="form-label">{% trans "Categoría" %}</label>
+            <select name="categoria" class="form-select">
+                <option value="" {% if not categoria_seleccionada %}selected{% endif %}>{% trans "Todas" %}</option>
+                {% for categoria in categorias %}
+                    <option value="{{ categoria.id }}" {% if categoria.id|stringformat:"s" == categoria_seleccionada %}selected{% endif %}>
+                        {{ categoria.nombre }}
+                    </option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <div class="col-md-4">
+            <label for="nombre" class="form-label">{% trans "Nombre" %}</label>
+            <input type="text" name="nombre" class="form-control" value="{{ nombre_buscado }}" placeholder="{% trans 'Buscar por nombre' %}">
+        </div>
+
+        <div class="col-md-4 d-flex align-items-end">
+            <button type="submit" class="btn btn-primary me-2">🔍 {% trans "Filtrar" %}</button>
+            <a href="{% url 'lista_productos' %}" class="btn btn-secondary">❌ {% trans "Quitar filtros" %}</a>
+        </div>
+    </form>
+</div>
+
+<div class="row">
+    {% for producto in productos %}
+    <div class="col-md-4 mb-4">
+        <div class="card h-100">
+            {% if producto.imagen %}
+                <img src="{{ producto.imagen.url }}" class="card-img-top" alt="{{ producto.titulo }}" style="max-height: 200px; object-fit: cover;">
+            {% else %}
+                <div class="p-3 text-muted">{% trans "No hay imagen disponible" %}</div>
+            {% endif %}
+            <div class="card-body">
+                <h5 class="card-title">{{ producto.titulo }}</h5>
+                <p class="card-text">{{ producto.descripcion }}</p>
+                <p><strong>{% trans "Precio:" %}</strong> ${{ producto.precio|floatformat:0|intcomma }}</p>
+                <p><strong>{% trans "Stock:" %}</strong> {{ producto.stock }} {% trans "unidades" %}</p>
+                <p><strong>{% trans "Categoría:" %}</strong> {{ producto.categoria.nombre }}</p>
+            </div>
+            <div class="card-footer d-flex flex-column gap-2">
+                <a href="{% url 'eliminar_producto' producto.id %}" class="btn btn-outline-danger">🗑 {% trans "Eliminar" %}</a>
+
+                <form action="{% url 'agregar_al_carrito' producto.id %}" method="post">
+                    {% csrf_token %}
+                    <div class="input-group">
+                        <input type="number" name="cantidad" class="form-control" value="1" min="1">
+                        <button type="submit" class="btn btn-outline-primary">🛒 {% trans "Añadir al carrito" %}</button>
+                    </div>
+                </form>
+
+                <form action="{% url 'agregar_a_wishlist' producto.id %}" method="post">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-outline-warning">❤️ {% trans "Añadir a Wishlist" %}</button>
+                </form>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+{% endblock %}

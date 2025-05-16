@@ -1,0 +1,42 @@
+{% extends 'base.html' %}
+{% load i18n %}
+
+{% block content %}
+<div class="container my-5">
+    <h2 class="mb-4 text-info">📦 {% trans "Mis Pedidos" %}</h2>
+
+    {% if pedidos %}
+        <div class="row row-cols-1 g-4">
+            {% for pedido in pedidos %}
+            <div class="col">
+                <div class="card shadow-sm">
+                    <div class="card-header bg-light">
+                        {% blocktrans with id=pedido.id fecha=pedido.fecha|date:"d/m/Y H:i" %}
+                            <strong>Pedido #{{ id }}</strong> | 
+                            <span class="text-muted">{{ fecha }}</span>
+                        {% endblocktrans %}
+                    </div>
+                    <div class="card-body">
+                        <ul class="list-group list-group-flush mb-3">
+                            {% for detalle in pedido.detalles.all %}
+                            <li class="list-group-item d-flex justify-content-between align-items-center">
+                                {% blocktrans with cantidad=detalle.cantidad titulo=detalle.producto.titulo %}
+                                    {{ cantidad }} x {{ titulo }}
+                                {% endblocktrans %}
+                                <span class="badge bg-primary rounded-pill">${{ detalle.subtotal }}</span>
+                            </li>
+                            {% endfor %}
+                        </ul>
+                        <h5 class="card-text text-end">
+                            💰 {% blocktrans %}Total:{% endblocktrans %} <span class="text-success">${{ pedido.total }}</span>
+                        </h5>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <div class="alert alert-warning">⚠️ {% trans "No tienes pedidos aún." %}</div>
+    {% endif %}
+</div>
+{% endblock %}
