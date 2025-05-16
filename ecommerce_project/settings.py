@@ -146,4 +146,6 @@ STATIC_URL = '/static/'
 STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static')]
 STATIC_ROOT = BASE_DIR / 'staticfiles'
 
+LOGIN_URL = '/login/'
+
 WEATHERAPI_KEY = '540a44e7b495451fa01231322251505'

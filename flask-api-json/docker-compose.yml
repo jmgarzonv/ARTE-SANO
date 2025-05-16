@@ -1,0 +1,10 @@
+services:
+  api:
+    build: .
+    ports:
+      - "5000:5000"
+    environment:
+      - DATABASE_URL=sqlite:////app/db.sqlite3
+      - MEDIA_BASE_URL=http://localhost:8000/media/
+    volumes:
+      - ../db.sqlite3:/app/db.sqlite3

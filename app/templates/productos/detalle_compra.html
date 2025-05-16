@@ -26,7 +26,7 @@
                     <td>{{ detalle.producto.titulo }}</td>
                     <td>{{ detalle.cantidad }}</td>
                     <td>${{ detalle.precio_unitario|floatformat:0|intcomma }}</td>
-                    <td>${{ detalle.subtotal|floatformat:0|intcomma }}</td>
+                    <td>${{ detalle.subtotal|add:"0"|floatformat:0|intcomma }}</td>  {# ✅ Corrección aquí #}
                 </tr>
                 {% endfor %}
             </tbody>
@@ -35,6 +35,14 @@
         <div class="text-end mt-3">
             <h4 class="text-primary">💰 {% blocktrans %}Total a Pagar: ${{ pedido.total|floatformat:0|intcomma }}{% endblocktrans %}</h4>
         </div>
+
+        {% if receipt_url %}
+        <div class="mt-4">
+            <a href="{{ receipt_url }}" target="_blank" class="btn btn-outline-primary">
+                📄 Ver/Descargar cheque en PDF
+            </a>
+        </div>
+        {% endif %}
 
         <div class="mt-4">
             <a href="{% url 'lista_productos' %}" class="btn btn-outline-primary">⬅️ {% trans "Seguir Comprando" %}</a>

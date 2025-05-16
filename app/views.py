@@ -17,7 +17,10 @@ from django.utils import translation
 from django.conf import settings
 from django.shortcuts import redirect
 import requests
-
+from django.http import JsonResponse
+from .services.payment import CheckPayment, BalancePayment, PaymentError
+from .services.order_service import OrderService
+from django.db import IntegrityError
 
 # Vista para listar productos
 def lista_productos(request):
@@ -137,8 +140,13 @@ def obtener_carrito(request):
     if not session_id:
         request.session.create()
         session_id = request.session.session_key
-    
+
     carrito, created = Carrito.objects.get_or_create(session_id=session_id)
+
+    if request.user.is_authenticated:
+        carrito.usuario = request.user
+        carrito.save()
+
     return carrito
 
 def agregar_al_carrito(request, producto_id):
@@ -190,15 +198,42 @@ def agregar_al_carrito(request, producto_id):
 
     return redirect('ver_carrito')  # Redirige al carrito después de agregar un producto
 
+@login_required
 def finalizar_compra(request):
-    carrito = obtener_carrito(request)
-    items = carrito.items.all()
+    if request.method != 'POST':
+        return redirect('ver_carrito')
+
+    metodo_pago = request.POST.get('metodo_pago')
+    check_number = request.POST.get('check_number', '0000')  # opcional
+
+    carrito = get_object_or_404(Carrito, usuario=request.user)
+    items = carrito.items.select_related('producto').all()
 
     if not items:
         return redirect('ver_carrito')
 
-    usuario = request.user if request.user.is_authenticated else None
-    pedido = Pedido.objects.create(usuario=usuario, total=0)
+    # Elegir el procesador de pagos adecuado
+    if metodo_pago == 'cheque':
+        processor = CheckPayment()
+        payment_kwargs = {'check_number': check_number}
+    elif metodo_pago == 'saldo':
+        processor = BalancePayment()
+        payment_kwargs = {}
+    else:
+        return redirect('ver_carrito')
+
+    # Usar el servicio de órdenes
+    order_service = OrderService(processor, **payment_kwargs)
+
+    try:
+        pedido = order_service.place_order(request.user, items)
+    except PaymentError as e:
+        return render(request, 'productos/error_pago.html', {'mensaje': str(e)})
+
+    if not pedido:
+        return render(request, 'productos/error_pago.html', {'mensaje': 'No se pudo procesar el pedido. Verifica tu saldo o stock disponible.'})
+
+    # Este bloque es importante para actualizar stock y detalles del pedido
     total_pedido = 0
     detalles = []
 
@@ -207,7 +242,9 @@ def finalizar_compra(request):
         cantidad = item.cantidad
 
         if producto.stock < cantidad:
-            return JsonResponse({'error': _('Stock insuficiente para %(titulo)s') % {'titulo': producto.titulo}}, status=400)
+            # Aquí podrías lanzar excepción o manejar el error
+            return render(request, 'productos/error_pago.html', {'mensaje': f'Stock insuficiente para {producto.titulo}'})
+
         # Reducir stock
         producto.stock -= cantidad
         producto.save()
@@ -226,15 +263,26 @@ def finalizar_compra(request):
     pedido.total = total_pedido
     pedido.save()
 
-    # Vaciar el carrito después de la compra
+    # Vaciar carrito después de la compra
     carrito.items.all().delete()
 
+    # Redirigir a la vista de detalle con recibo si es un cheque
+    url = reverse('detalle_compra', args=[pedido.id])
+    if isinstance(processor, CheckPayment) and hasattr(processor, 'receipt_path'):
+        url += f'?receipt={processor.receipt_path}'
+
+    return redirect(url)
+
+
+def detalle_compra(request, pedido_id):
+    pedido = get_object_or_404(Pedido, id=pedido_id)
+    detalles = pedido.detalles.all()
+    receipt_url = request.GET.get('receipt')  # opcional, para el PDF
     return render(request, 'productos/detalle_compra.html', {
         'pedido': pedido,
-        'detalles': detalles
+        'detalles': detalles,
+        'receipt_url': receipt_url,
     })
-
-
 
 
 def productos_mas_vendidos(request):
@@ -298,18 +346,23 @@ def registro(request):
         form = RegisterForm()
     return render(request, 'login/registro.html', {'form': form})
 
-def iniciar_sesion(request):
-    form = AuthenticationForm()
+from django.contrib.auth.forms import AuthenticationForm
 
+def iniciar_sesion(request):
     if request.method == 'POST':
-        form = LoginForm(data=request.POST)
+        form = AuthenticationForm(request, data=request.POST)
+        print('Validando formulario...')
         if form.is_valid():
+            print('Formulario válido, logueando usuario...')
             user = form.get_user()
             login(request, user)
             return redirect('lista_productos')
+        else:
+            print('Errores:', form.errors)
     else:
-        form = LoginForm()
+        form = AuthenticationForm()
     return render(request, 'login/login.html', {'form': form})
+
 
 @login_required
 def cerrar_sesion(request):
